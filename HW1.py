@@ -38,6 +38,7 @@ stategeo = states[state]
 counties = censusdata.geographies(censusdata.censusgeo([stategeo.params()[0], ('county','*')]),'acs5',2018 , key='db8c95da0a4bf1d0f0b43c6e66158daaef578790')
 countylist = list(counties.values())
 
+#For each county in your chosen state, this will create a dataframe of all of the chosen variables down to the block group level
 for county in countylist:
     params = county.params()
     if(county==countylist[0]):
@@ -51,7 +52,8 @@ for county in countylist:
 
 
 #Part 2 Transform data
-data.rename(columns=variable_names, inplace=True)
+data.rename(columns=variable_names, inplace=True) #make interpretable column names
+#turn index into columns with relevent data (state, county, block group, etc)
 data.reset_index(inplace=True)
 data['index'] = data['index'].apply(str)
 data['index'] = data['index'].apply(lambda x: re.sub(':.*','',x))
@@ -61,12 +63,15 @@ data['tract']=data['tract'].apply(lambda x: int(re.search('\d+',x).group(0)))
 data = data.drop(['index'],axis=1)
 
 #Part 3 Load on Database
-#create create table statement
-db_string = sys.argv[1]
+#inifinite thanks to Rayid Ghani for helping me code/troubleshoot this part
+db_string = sys.argv[1] #sysarg must be of the form "postgres://username:password@localhost:port/database"
 engine = create_engine(db_string)
-data.pg_copy_to(table_name, engine, if_exists='replace',index=False)
+data.pg_copy_to(table_name, engine, if_exists='replace',index=False, schema = "emontana_test")
 
+
+#additional code I'd started working on before getting office hour help
 '''
+#make create_table string from chosen variables
 create_table = "create table census ("
 for val in variable_names.values():
     create_table += val
