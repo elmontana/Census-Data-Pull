@@ -8,9 +8,7 @@ Created on Thu Sep 17 10:52:02 2020
 """
 import censusdata
 import re
-import ohio.ext.pandas
 from sqlalchemy import create_engine
-import psycopg2
 import sys
 
 ### editable section
