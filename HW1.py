@@ -10,6 +10,7 @@ import censusdata
 import re
 from sqlalchemy import create_engine
 import sys
+import ohio.ext.pandas
 
 ### editable section
 state = "New York"
