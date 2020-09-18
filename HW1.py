@@ -31,10 +31,10 @@ table_name = "census_data"
 
 
 ##Part 1 - get data from Census
-states = censusdata.geographies(censusdata.censusgeo([('state','*')]),'acs5',2018)
+states = censusdata.geographies(censusdata.censusgeo([('state','*')]),'acs5',2018, key='db8c95da0a4bf1d0f0b43c6e66158daaef578790')
 stategeo = states[state]
 
-counties = censusdata.geographies(censusdata.censusgeo([stategeo.params()[0], ('county','*')]),'acs5',2018)
+counties = censusdata.geographies(censusdata.censusgeo([stategeo.params()[0], ('county','*')]),'acs5',2018 , key='db8c95da0a4bf1d0f0b43c6e66158daaef578790')
 countylist = list(counties.values())
 
 for county in countylist:
@@ -42,11 +42,11 @@ for county in countylist:
     if(county==countylist[0]):
         data = censusdata.download('acs5', 2018,
                              censusdata.censusgeo([params[0],params[1], ('block group', '*')]),
-                             variables)
+                             variables, key='db8c95da0a4bf1d0f0b43c6e66158daaef578790')
     else:
         data = data.append(censusdata.download('acs5', 2018,
                              censusdata.censusgeo([params[0],params[1], ('block group', '*')]),
-                             variables))
+                             variables, key='db8c95da0a4bf1d0f0b43c6e66158daaef578790'))
 
 
 #Part 2 Transform data
